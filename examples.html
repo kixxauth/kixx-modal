@@ -130,9 +130,16 @@
 
 		$(function ($) {
 			var deck = $.kixxModal.createDeck()
+				, timeout
 
+			deck.on('kixx-modal:opening', function () {
+				window.clearTimeout(timeout);
+			});
+			
 			deck.on('kixx-modal:closed', function () {
-				window.location.hash = '';
+				timeout = window.setTimeout(function () {
+					window.location.hash = '';
+				}, 30);
 			});
 
 			$(window).on('hashchange', function (ev) {

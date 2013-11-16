@@ -31,22 +31,20 @@
       var complete = refunct(opts, 'complete')
         , $this = this
 
-      if (this.data('kixxModalLocked')) {
+      if (this.data('kixxModalLocked') || this.data('kixxModalOpen')) {
         return this;
       }
 
       this.data('kixxModalLocked', true);
 
       opts.complete = function () {
+        $this.data('kixxModalOpen', true);
         $this.data('kixxModalLocked', false);
         $this.trigger('kixx-modal:opened');
         complete.call(this);
       };
 
       this.fadeIn(opts);
-
-      function doClose(ev) {
-      }
 
       this.trigger('kixx-modal:opening');
       return this;
@@ -57,13 +55,14 @@
       var complete = refunct(opts, 'complete')
         , $this = this
 
-      if (this.data('kixxModalLocked')) {
+      if (this.data('kixxModalLocked') || !this.data('kixxModalOpen')) {
         return this;
       }
 
       this.data('kixxModalLocked', true);
 
       opts.complete = function () {
+        $this.data('kixxModalOpen', false);
         $this.data('kixxModalLocked', false);
         $this.trigger('kixx-modal:closed');
         complete.call(this);
