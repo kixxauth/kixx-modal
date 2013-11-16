@@ -116,7 +116,7 @@
 		$(function ($) {
 			var time = new Date().getTime()
 
-			$('a.trigger-modal').kixxModal('register');
+			$('a.trigger-modal').kixxModal('register', {open: {position: false}});
 
 			$('#modal-a').on('kixx-modal:opening', function (ev) {
 				var $el = $(this)
@@ -135,7 +135,7 @@
 			deck.on('kixx-modal:opening', function () {
 				window.clearTimeout(timeout);
 			});
-			
+
 			deck.on('kixx-modal:closed', function () {
 				timeout = window.setTimeout(function () {
 					window.location.hash = '';

@@ -9,8 +9,8 @@
   kixxModal.methods = {
     register: function (opts) {
       opts = opts || {};
-      var openOptions = opts.openOptions
-        , closeOptions = opts.closeOptions
+      var openOptions = opts.open
+        , closeOptions = opts.close
         , id = kixxModal.hashToId($(this).attr('href'))
         , $modal = $('#'+ id)
 
@@ -26,10 +26,17 @@
       return this;
     },
 
+    // opts.topMargin
+    // opts.bottomMargin
+    // opts.position
     open: function (opts) {
       opts = opts || {};
+      opts.position = opts.position === undefined ? true : opts.position
+
       var complete = refunct(opts, 'complete')
         , $this = this
+        , comps
+        , css
 
       if (this.data('kixxModalLocked') || this.data('kixxModalOpen')) {
         return this;
@@ -46,7 +53,23 @@
 
       this.fadeIn(opts);
 
+      comps = computeHeight.call(this, opts);
+      if (comps.topMargin || opts.position) {
+        css = {position: 'absolute'};
+        if (comps.topMargin) {
+          css.top = comps.topMargin;
+        }
+        css.width = this.find('.modal-content').outerWidth(true);
+        css.marginLeft = -Math.round(css.width / 2);
+        css.left = "50%";
+        this.css(css);
+      }
+      if (comps.innerHeight) {
+        this.find('.modal-content').css({maxHeight: comps.innerHeight});
+      }
+
       this.trigger('kixx-modal:opening');
+
       return this;
     },
 
@@ -73,6 +96,24 @@
       return this;
     }
   };
+
+  function computeHeight(opts) {
+    opts.topMargin = opts.topMargin || (opts.position ? 0.1 : 0);
+    opts.bottomMargin = opts.bottomMargin || (opts.position ? 0.1 : 0);
+
+    var header = this.find('.modal-header').outerHeight(true) || 0
+      , footer = this.find('.modal-footer').outerHeight(true) || 0
+      , win = $(window).innerHeight()
+      , topMargin = Math.floor(opts.topMargin * win)
+      , bottomMargin = Math.floor(opts.bottomMargin * win)
+      , innerHeight = 0
+
+    if (topMargin || bottomMargin) {
+      innerHeight = Math.floor(win - topMargin - header - footer - bottomMargin);
+    }
+
+    return {topMargin: topMargin, innerHeight: innerHeight};
+  }
 
   kixxModal.createDeck = function (opts) {
     opts = opts || {};
