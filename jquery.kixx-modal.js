@@ -44,6 +44,10 @@
       };
 
       this.fadeIn(opts);
+
+      function doClose(ev) {
+      }
+
       this.trigger('kixx-modal:opening');
       return this;
     },
@@ -71,31 +75,47 @@
     }
   };
 
-  kixxModal.modalDeck = function (opts) {
+  kixxModal.createDeck = function (opts) {
     opts = opts || {};
 
     var self = {}
+      , dispatcher = $({})
       , closeOptions = opts.close || {}
       , openOptions = opts.open || {}
       , cache = {}
       , current = null
       , locked = false
 
+    self.on = function (event, handler) {
+      dispatcher.on.apply(dispatcher, arguments);
+      return self;
+    };
+
+    self.off = function (event, handler) {
+      dispatcher.off.apply(dispatcher, arguments);
+      return self;
+    };
+
+    self.one = function (event, handler) {
+      dispatcher.one.apply(dispatcher, arguments);
+      return self;
+    };
+
     self.open = function (id, callback) {
       id = id.toString();
       if (locked || current == id) return this;
+
+      var el = document.getElementById(id)
+      if (!el) return this;
+
+      var $modal = initializeModal(el);
 
       locked = true;
       callback = refunct(callback);
 
       function doOpen() {
-        var $modal
-          , opts = $.extend({}, openOptions)
+        var opts = $.extend({}, openOptions)
           , complete = refunct(opts, 'complete')
-
-        if (!($modal = cache[id])) {
-          $modal = cache[id] = $('#'+ id);
-        }
 
         opts.complete = function () {
           current = id;
@@ -123,6 +143,51 @@
       return this;
     };
 
+    self.close = function (callback) {
+      if (locked || !current) return this;
+      locked = true;
+
+      var opts = $.extend({}, closeOptions)
+        , complete = refunct(opts, 'complete')
+
+      callback = refunct(callback);
+
+      opts.complete = function () {
+        current = null;
+        locked = false;
+        complete.call(this);
+        callback();
+      };
+      cache[current].kixxModal('close', opts);
+    };
+
+    function initializeModal(el) {
+      if (cache[el.id]) {
+        return cache[el.id];
+      }
+
+      var $modal = $(el)
+        , events = [
+            'kixx-modal:opening'
+          , 'kixx-modal:open'
+          , 'kixx-modal:closing'
+          , 'kixx-modal:closed'
+          ]
+
+      $.each(events, function (i, evname) {
+        $modal.on(evname, function (ev) {
+          dispatcher.trigger(evname);
+        });
+      });
+
+      $modal.find('.close-modal').on('click', function (ev) {
+        ev.preventDefault();
+        self.close();
+      });
+
+      return cache[el.id] = $modal;
+    }
+
     return self;
   };
 
@@ -138,5 +203,7 @@
     }
     return $.isFunction(obj[name]) ? obj[name] : kixxModal.noop;
   }
+
+  $.kixxModal = kixxModal;
 
 }(window, document, jQuery));
