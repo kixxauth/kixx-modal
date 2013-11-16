@@ -41,16 +41,38 @@
 		</div>
 
 		<div id="modal-a" class="modal">
+			<p class="report-before">Size at open: <strong class="result"></strong></p>
+			<p class="report-after">Time to open: <strong class="result"></strong></p>
 			<p>
 				A modal window blocks all other workflow in the top-level program until the modal window is closed, as opposed to modeless dialogs that allow users to operate with other windows. Modal windows are intended to grab the user's full attention. Users may not recognize that a modal window requires their attention, leading to confusion about the main window being non-responsive, or causing loss of the user's data input intended for the main window (see Mode error). In some more pathological cases, the modal window will appear behind another window controlled by the same program, potentially rendering the entire program unresponsive until the modal window can be located manually.
 			</p>
 			<p>
-				However, many interface designers have recently taken steps to make modal windows more obvious and user friendly by darkening the background behind the window or allowing any mouse click outside of the modal window to force the window to close – a design called a Lightbox[3] – thus alleviating those problems. Jakob Nielsen states as an advantage of modal dialogs that it improves user awareness: "When something does need fixing, it's better to make sure that the user knows about it". For this goal, the lightbox design provides strong visual contrast of the dialog over the rest of the visuals. The lightbox technique is now a common tool in website design.	
+				However, many interface designers have recently taken steps to make modal windows more obvious and user friendly by darkening the background behind the window or allowing any mouse click outside of the modal window to force the window to close – a design called a Lightbox – thus alleviating those problems. Jakob Nielsen states as an advantage of modal dialogs that it improves user awareness: "When something does need fixing, it's better to make sure that the user knows about it". For this goal, the lightbox design provides strong visual contrast of the dialog over the rest of the visuals. The lightbox technique is now a common tool in website design.	
+			</p>
+			<p>
+				<button class="close-modal">Close</button>
 			</p>
 		</div>
 
 
 		<script src="./lib/jquery-1.10.2.js"></script>
 		<script src="./jquery.kixx-modal.js"></script>
+
+		<script>
+		$(function ($) {
+			var time = new Date().getTime()
+
+			$('a.trigger-modal').kixxModal('register');
+
+			$('#modal-a').on('kixx-modal:opening', function (ev) {
+				var $el = $(this)
+					, result = $el.innerWidth() +'x'+ $el.innerHeight()
+				$(this).find('.report-before').find('.result').text(result);
+			}).on('kixx-modal:opened', function (ev) {
+				var result = (new Date().getTime() - time) +'ms'
+				$(this).find('.report-after').find('.result').text(result);
+			});
+		});
+		</script>
 	</body>
 </html>
