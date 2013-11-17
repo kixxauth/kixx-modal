@@ -1,5 +1,6 @@
 (function (window, document, $) {
   var kixxModal
+    , $overlay = null
 
   $.fn.kixxModal = kixxModal = function (method, opts) {
     kixxModal.methods[method].call(this, opts);
@@ -51,7 +52,8 @@
         complete.call(this);
       };
 
-      this.fadeIn(opts);
+      kixxModal.$overlay().fadeIn(200);
+      $this.fadeIn(opts);
 
       comps = computeHeight.call(this, opts);
       if (comps.topMargin || opts.position) {
@@ -91,6 +93,7 @@
         complete.call(this);
       };
 
+      kixxModal.$overlay().fadeOut(200);
       this.fadeOut(opts);
       this.trigger('kixx-modal:closing');
       return this;
@@ -229,6 +232,14 @@
     }
 
     return self;
+  };
+
+  kixxModal.$overlay = function () {
+    if (!$overlay) {
+      $overlay = $('<div id="kixx-modal-overlay"></div>')
+        .appendTo($('body'))
+    }
+    return $overlay;
   };
 
   kixxModal.hashToId = function (str) {

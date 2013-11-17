@@ -10,13 +10,56 @@
 		body {
 			font-family: sans-serif;
 		}
+		img {
+			max-width: 100%;
+		}
 		#container {
 			max-width: 800px;
 			margin: 0 auto;
 		}
+		
+		#kixx-modal-overlay {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			height: 100%;
+			background-color: #000;
+			-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+			opacity: 0.5;
+			z-index: 2;
+		}
+
 		.modal {
 			width: 600px;
 			display: none;
+	    border: 16px solid rgba(200, 200, 200, 0.5);
+	    -moz-box-shadow: 0 0 10px rgba(0,0,0,.4);
+	    -webkit-box-shadow: 0 0 10px rgba(0,0,0,.4);
+	    box-shadow: 0 0 10px rgba(0,0,0,.4);
+	    z-index: 3;
+		}
+		.modal .modal-content {
+			overflow-y: auto;
+		}
+
+		#modal-a {
+			position: absolute;
+			top: 80px;
+			left: 50%;
+			margin-left: -300px;
+		}
+		#modal-a .inner {
+			padding: 1em;
+			background-color: #fff;
+		}
+
+		section.modal {
+			background-color: #fff;
+			padding: 1em;
 		}
 		</style>
 		<script src="./lib/modernizr.custom.43918.js"></script>
@@ -50,6 +93,7 @@
 		</div>
 
 		<div id="modal-a" class="modal">
+			<div class="inner">
 			<p class="report-before">Size at open: <strong class="result"></strong></p>
 			<p class="report-after">Time to open: <strong class="result"></strong></p>
 			<p>
@@ -61,6 +105,7 @@
 			<p>
 				<button class="close-modal">Close</button>
 			</p>
+			</div>
 		</div>
 
 		<section id="section-a" class="modal">
@@ -100,7 +145,7 @@
 		<section id="section-c" class="modal">
 			<h2 class="modal-header">IMAGES</h2>
 			<div class="modal-content">
-				<img src="http://upload.wikimedia.org/wikipedia/en/4/4d/Aurora_Borealis_Poster.jpg" width="1640" height="1740">
+				<img src="http://upload.wikimedia.org/wikipedia/en/4/4d/Aurora_Borealis_Poster.jpg" width="1640">
 			</div>
 			<div class="modal-footer">
 				<p>
