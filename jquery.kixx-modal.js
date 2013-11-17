@@ -106,13 +106,14 @@
 
     var header = this.find('.modal-header').outerHeight(true) || 0
       , footer = this.find('.modal-footer').outerHeight(true) || 0
+      , borderPadding = this.outerHeight() - this.innerHeight()
       , win = $(window).innerHeight()
       , topMargin = Math.floor(opts.topMargin * win)
       , bottomMargin = Math.floor(opts.bottomMargin * win)
       , innerHeight = 0
 
     if (topMargin || bottomMargin) {
-      innerHeight = Math.floor(win - topMargin - header - footer - bottomMargin);
+      innerHeight = Math.floor(win - topMargin - header - footer - borderPadding - bottomMargin);
     }
 
     return {topMargin: topMargin, innerHeight: innerHeight};
