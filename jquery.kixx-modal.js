@@ -52,7 +52,15 @@
         complete.call(this);
       };
 
-      kixxModal.$overlay().fadeIn(200);
+      function close() {
+        kixxModal.$overlay().off('click', close);
+
+        // Need to store some user defined close animation options in
+        // jQuery data for this element.
+        $this.kixxModal('close');
+      }
+
+      kixxModal.$overlay().fadeIn(200).on('click', close);
       $this.fadeIn(opts);
 
       comps = computeHeight.call(this, opts);
@@ -80,7 +88,11 @@
       var complete = refunct(opts, 'complete')
         , $this = this
 
-      if (this.data('kixxModalLocked') || !this.data('kixxModalOpen')) {
+      if (this.data('kixxModalLocked')) {
+        return this;
+      }
+      if (!this.data('kixxModalOpen')) {
+        complete.call(this);
         return this;
       }
 
@@ -104,16 +116,14 @@
     opts.topMargin = opts.topMargin || (opts.position ? 0.1 : 0);
     opts.bottomMargin = opts.bottomMargin || (opts.position ? 0.1 : 0);
 
-    var header = this.find('.modal-header').outerHeight(true) || 0
-      , footer = this.find('.modal-footer').outerHeight(true) || 0
-      , borderPadding = this.outerHeight() - this.innerHeight()
+    var borderPadding = this.outerHeight() - this.find('.modal-content').innerHeight()
       , win = $(window).innerHeight()
       , topMargin = Math.floor(opts.topMargin * win)
       , bottomMargin = Math.floor(opts.bottomMargin * win)
       , innerHeight = 0
 
     if (topMargin || bottomMargin) {
-      innerHeight = Math.floor(win - topMargin - header - footer - borderPadding - bottomMargin);
+      innerHeight = Math.floor(win - topMargin - borderPadding - bottomMargin);
     }
 
     return {topMargin: topMargin, innerHeight: innerHeight};
@@ -145,30 +155,34 @@
       return self;
     };
 
-    self.open = function (id, callback) {
+    self.open = function (id, opts) {
+      opts = opts || {};
       id = id.toString();
       if (locked || current == id) return this;
 
       var el = document.getElementById(id)
       if (!el) return this;
 
-      var $modal = initializeModal(el);
-
       locked = true;
-      callback = refunct(callback);
+
+      var $modal = initializeModal(el)
+        , callback = refunct(opts, 'complete')
 
       function doOpen() {
-        var opts = $.extend({}, openOptions)
-          , complete = refunct(opts, 'complete')
+        var options = $.extend({}, openOptions)
+          , complete
 
-        opts.complete = function () {
+        options = $.extend(options, opts);
+        complete = refunct(options, 'complete');
+
+        options.complete = function () {
           current = id;
           locked = false;
           complete.call(this);
           callback();
         }
 
-        $modal.kixxModal('open', opts);
+        $modal.kixxModal('open', options);
       }
 
       if (current) {
@@ -220,7 +234,7 @@
 
       $.each(events, function (i, evname) {
         $modal.on(evname, function (ev) {
-          dispatcher.trigger(evname);
+          dispatcher.trigger(evname, [$modal[0]]);
         });
       });
 
