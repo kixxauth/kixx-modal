@@ -27,73 +27,48 @@
       return this;
     },
 
-    // opts.topMargin
-    // opts.bottomMargin
-    // opts.position
     open: function (opts) {
       opts = opts || {};
-      opts.position = opts.position === undefined ? true : opts.position
 
       var complete = refunct(opts, 'complete')
         , $this = this
-        , comps
-        , css
 
       if (this.data('kixxModalLocked') || this.data('kixxModalOpen')) {
-        return this;
+        return complete.call(this, false);
       }
 
       this.data('kixxModalLocked', true);
+      this.data('kixxModalOptions', opts);
 
       opts.complete = function () {
         $this.data('kixxModalOpen', true);
         $this.data('kixxModalLocked', false);
         $this.trigger('kixx-modal:opened');
-        complete.call(this);
+        complete.call(this, true);
       };
 
       function close() {
         kixxModal.$overlay().off('click', close);
-
-        // Need to store some user defined close animation options in
-        // jQuery data for this element.
         $this.kixxModal('close');
       }
 
       kixxModal.$overlay().fadeIn(200).on('click', close);
-      $this.fadeIn(opts);
 
-      comps = computeHeight.call(this, opts);
-      if (comps.topMargin || opts.position) {
-        css = {position: 'absolute'};
-        if (comps.topMargin) {
-          css.top = comps.topMargin;
-        }
-        css.width = this.find('.modal-content').outerWidth(true);
-        css.marginLeft = -Math.round(css.width / 2);
-        css.left = "50%";
-        this.css(css);
-      }
-      if (comps.innerHeight) {
-        this.find('.modal-content').css({maxHeight: comps.innerHeight});
-      }
+      this.fadeIn(opts);
+      position.call(this, opts);
 
       this.trigger('kixx-modal:opening');
-
       return this;
     },
 
     close: function (opts) {
       opts = opts || {};
+
       var complete = refunct(opts, 'complete')
         , $this = this
 
-      if (this.data('kixxModalLocked')) {
-        return this;
-      }
-      if (!this.data('kixxModalOpen')) {
-        complete.call(this);
-        return this;
+      if (this.data('kixxModalLocked') || !this.data('kixxModalOpen')) {
+        return complete.call(this, false);
       }
 
       this.data('kixxModalLocked', true);
@@ -102,31 +77,18 @@
         $this.data('kixxModalOpen', false);
         $this.data('kixxModalLocked', false);
         $this.trigger('kixx-modal:closed');
-        complete.call(this);
+        complete.call(this, true);
       };
 
       kixxModal.$overlay().fadeOut(200);
       this.fadeOut(opts);
+      
       this.trigger('kixx-modal:closing');
       return this;
     }
   };
 
-  function computeHeight(opts) {
-    opts.topMargin = opts.topMargin || (opts.position ? 0.1 : 0);
-    opts.bottomMargin = opts.bottomMargin || (opts.position ? 0.1 : 0);
-
-    var borderPadding = this.outerHeight() - this.find('.modal-content').innerHeight()
-      , win = $(window).innerHeight()
-      , topMargin = Math.floor(opts.topMargin * win)
-      , bottomMargin = Math.floor(opts.bottomMargin * win)
-      , innerHeight = 0
-
-    if (topMargin || bottomMargin) {
-      innerHeight = Math.floor(win - topMargin - borderPadding - bottomMargin);
-    }
-
-    return {topMargin: topMargin, innerHeight: innerHeight};
+  function position(opts) {
   }
 
   kixxModal.createDeck = function (opts) {
