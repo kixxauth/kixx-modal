@@ -55,14 +55,14 @@
       kixxModal.$overlay().fadeIn(200).on('click', close);
 
       this.fadeIn(opts);
-      position.call(this, opts);
+      position.call(this);
 
       this.trigger('kixx-modal:opening');
       return this;
     },
 
     close: function (opts) {
-      opts = opts || {};
+      opts = opts || this.data('kixxModalOptions') || {};
 
       var complete = refunct(opts, 'complete')
         , $this = this
@@ -88,16 +88,22 @@
     }
   };
 
-  function position(opts) {
+  function position() {
+    var h = this.outerHeight()
+      , w = this.outerWidth()
+
+    this.css({
+      marginLeft: -(w/2)
+    , marginTop: -(h/2)
+    });
   }
 
-  kixxModal.createDeck = function (opts) {
-    opts = opts || {};
+  kixxModal.createDeck = function (gOpenOptions, gCloseOptions) {
+    gOpenOptions = gOpenOptions || {};
+    gCloseOptions = gCloseOptions || {};
 
     var self = {}
       , dispatcher = $({})
-      , closeOptions = opts.close || {}
-      , openOptions = opts.open || {}
       , cache = {}
       , current = null
       , locked = false
@@ -117,43 +123,38 @@
       return self;
     };
 
-    self.open = function (id, opts) {
-      opts = opts || {};
+    self.open = function (id, openOptions, closeOptions) {
       id = id.toString();
-      if (locked || current == id) return this;
 
-      var el = document.getElementById(id)
-      if (!el) return this;
+      var complete = refunct(openOptions, 'complete')
+        , el = document.getElementById(id)
 
-      locked = true;
-
-      var $modal = initializeModal(el)
-        , callback = refunct(opts, 'complete')
-
-      function doOpen() {
-        var options = $.extend({}, openOptions)
-          , complete
-
-        options = $.extend(options, opts);
-        complete = refunct(options, 'complete');
-
-        options.complete = function () {
-          current = id;
-          locked = false;
-          complete.call(this);
-          callback();
-        }
-
-        $modal.kixxModal('open', options);
+      if (locked || current == id || !el) {
+        complete.call(this, false);
+        return this;
       }
 
-      if (current) {
-        var opts = $.extend({}, closeOptions)
+      function doOpen() {
+        var $modal = initializeModal(el)
+          , opts = $.extend(openOptions || {}, gOpenOptions)
           , complete = refunct(opts, 'complete')
 
         opts.complete = function () {
+          current = id;
+          locked = false;
+          complete.call(this, true);
+        }
+
+        $modal.kixxModal('open', opts);
+      }
+
+      if (current) {
+        var opts = $.extend(closeOptions || {}, gCloseOptions)
+        complete = refunct(opts, 'complete')
+
+        opts.complete = function () {
           current = null;
-          complete.call(this);
+          complete.call(this, true);
           doOpen();
         };
         cache[current].kixxModal('close', opts);
@@ -163,20 +164,21 @@
       return this;
     };
 
-    self.close = function (callback) {
-      if (locked || !current) return this;
-      locked = true;
-
-      var opts = $.extend({}, closeOptions)
+    self.closeAll = function (opts) {
+      var opts = $.extend(opts || {}, gCloseOptions)
         , complete = refunct(opts, 'complete')
 
-      callback = refunct(callback);
+      if (locked || !current) {
+        complete.call(this, false);
+        return this;
+      }
+
+      locked = true;
 
       opts.complete = function () {
         current = null;
         locked = false;
-        complete.call(this);
-        callback();
+        complete.call(this, true);
       };
       cache[current].kixxModal('close', opts);
     };
