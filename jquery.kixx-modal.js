@@ -27,6 +27,7 @@
       return this;
     },
 
+    // opts.staticPosition
     open: function (opts) {
       opts = opts || {};
 
@@ -55,7 +56,7 @@
       kixxModal.$overlay().fadeIn(200).on('click', close);
 
       this.fadeIn(opts);
-      position.call(this);
+      position.call(this, opts);
 
       this.trigger('kixx-modal:opening');
       return this;
@@ -88,14 +89,18 @@
     }
   };
 
-  function position() {
-    var h = this.outerHeight()
-      , w = this.outerWidth()
+  function position(opts) {
+    if (opts.staticPosition) {
+      this.css(opts.staticPosition);
+    } else {
+      var h = this.outerHeight()
+        , w = this.outerWidth()
 
-    this.css({
-      marginLeft: -(w/2)
-    , marginTop: -(h/2)
-    });
+      this.css({
+        marginLeft: -(w/2)
+      , marginTop: -(h/2)
+      });
+    }
   }
 
   kixxModal.createDeck = function (gOpenOptions, gCloseOptions) {
@@ -125,6 +130,8 @@
 
     self.open = function (id, openOptions, closeOptions) {
       id = id.toString();
+      openOptions = openOptions || {};
+      closeOptions = closeOptions || {};
 
       var complete = refunct(openOptions, 'complete')
         , el = document.getElementById(id)
@@ -204,7 +211,7 @@
 
       $modal.find('.close-modal').on('click', function (ev) {
         ev.preventDefault();
-        self.close();
+        self.closeAll();
       });
 
       return cache[el.id] = $modal;
