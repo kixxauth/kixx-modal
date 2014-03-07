@@ -9,6 +9,8 @@
 
   kixxModal.methods = {
     register: function (opts) {
+      if (!this.length) return this;
+
       opts = opts || {};
       var openOptions = opts.open
         , closeOptions = opts.close
@@ -29,6 +31,8 @@
 
     // opts.staticPosition
     open: function (opts) {
+      if (!this.length) return this;
+
       opts = opts || {};
 
       var complete = refunct(opts, 'complete')
