@@ -1,203 +1,114 @@
 <!DOCTYPE html>
 <html class="no-js">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>jQuery Kixx Slides</title>
-		<meta name="description" content="A jQuery gallery slider tool for developers.">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<style type="text/css">
-		body {
-			font-family: sans-serif;
-		}
-		img {
-			max-width: 100%;
-		}
-		#container {
-			max-width: 800px;
-			margin: 0 auto;
-		}
-		
-		#kixx-modal-overlay {
-			display: none;
-			position: fixed;
-			top: 0;
-			left: 0;
-			margin: 0;
-			padding: 0;
-			width: 100%;
-			height: 100%;
-			background-color: #000;
-			-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-			opacity: 0.5;
-			z-index: 2;
-		}
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>jQuery Kixx Slides</title>
+    <meta name="description" content="A jQuery gallery slider tool for developers.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+    body {
+      font-family: sans-serif;
+    }
+    img {
+      max-width: 100%;
+    }
+    #container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-		.modal {
-			width: 600px;
-			display: none;
-	    border: 16px solid rgba(200, 200, 200, 0.5);
-	    -moz-box-shadow: 0 0 10px rgba(0,0,0,.4);
-	    -webkit-box-shadow: 0 0 10px rgba(0,0,0,.4);
-	    box-shadow: 0 0 10px rgba(0,0,0,.4);
-	    z-index: 3;
-		}
-		.modal .modal-content {
-			overflow-y: auto;
-		}
+    #kixx-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+      opacity: 0.5;
+      z-index: 2;
+    }
 
-		#modal-a {
-			position: absolute;
-			top: 80px;
-			left: 50%;
-			margin-left: -300px;
-		}
-		#modal-a .inner {
-			padding: 1em;
-			background-color: #fff;
-		}
+    .modal {
+      width: 600px;
+      display: none;
+      border: 16px solid rgba(200, 200, 200, 0.5);
+      -moz-box-shadow: 0 0 10px rgba(0,0,0,.4);
+      -webkit-box-shadow: 0 0 10px rgba(0,0,0,.4);
+      box-shadow: 0 0 10px rgba(0,0,0,.4);
+      z-index: 3;
+    }
+    .modal .modal-content {
+      overflow-y: auto;
+    }
 
-		section.modal {
-			background-color: #fff;
-			padding: 1em;
-		}
-		</style>
-		<script src="./lib/modernizr.custom.43918.js"></script>
-	</head>
-	<body>
-		<!--[if lt IE 8]>
-			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-		<![endif]-->
+    #modal-a {
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      margin-left: -300px;
+    }
+    #modal-a .inner {
+      padding: 1em;
+      background-color: #fff;
+    }
 
-		<div id="container">
-			<p>
-			In user interface design, a modal window is a child window that requires users to interact with it before they can return to operating the parent application, thus preventing the workflow on the application main window. Modal windows are often called heavy windows or modal dialogs because the window is often used to display a dialog box.	
-			</p>
+    section.modal {
+      background-color: #fff;
+      padding: 1em;
+    }
+    </style>
+    <script src="./lib/modernizr.custom.43918.js"></script>
+  </head>
+  <body>
+    <!--[if lt IE 8]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
 
-			<p>
-				<a href="#modal-a" class="trigger-modal">Open Modal-A</a>
-			</p>
+    <div id="container">
+      <p>
+      In user interface design, a modal window is a child window that requires users to interact with it before they can return to operating the parent application, thus preventing the workflow on the application main window. Modal windows are often called heavy windows or modal dialogs because the window is often used to display a dialog box. 
+      </p>
 
-			<p>
-			Modal windows are commonly used in GUI systems to command user awareness and to display emergency states, although they have been argued to be ineffective for that use. Modal windows are prone to produce mode errors.
-			On the Web, they are often used to show images in detail, in a pattern known as a Lightbox.
-			</p>
+      <p>
+        <a href="#modal-a" class="trigger-modal">Open Modal-A</a>
+      </p>
 
-			<nav>
-				<ul>
-					<li><a href="#section-a">Section A</a></li>
-					<li><a href="#section-b">Section B</a></li>
-					<li><a href="#section-c">Section C</a></li>
-				</ul>
-			</nav>
-		</div>
+      <p>
+      Modal windows are commonly used in GUI systems to command user awareness and to display emergency states, although they have been argued to be ineffective for that use. Modal windows are prone to produce mode errors.
+      On the Web, they are often used to show images in detail, in a pattern known as a Lightbox.
+      </p>
+    </div>
 
-		<div id="modal-a" class="modal">
-			<div class="inner">
-			<p class="report-before">Size at open: <strong class="result"></strong></p>
-			<p class="report-after">Time to open: <strong class="result"></strong></p>
-			<p>
-				A modal window blocks all other workflow in the top-level program until the modal window is closed, as opposed to modeless dialogs that allow users to operate with other windows. Modal windows are intended to grab the user's full attention. Users may not recognize that a modal window requires their attention, leading to confusion about the main window being non-responsive, or causing loss of the user's data input intended for the main window (see Mode error). In some more pathological cases, the modal window will appear behind another window controlled by the same program, potentially rendering the entire program unresponsive until the modal window can be located manually.
-			</p>
-			<p>
-				However, many interface designers have recently taken steps to make modal windows more obvious and user friendly by darkening the background behind the window or allowing any mouse click outside of the modal window to force the window to close – a design called a Lightbox – thus alleviating those problems. Jakob Nielsen states as an advantage of modal dialogs that it improves user awareness: "When something does need fixing, it's better to make sure that the user knows about it". For this goal, the lightbox design provides strong visual contrast of the dialog over the rest of the visuals. The lightbox technique is now a common tool in website design.	
-			</p>
-			<p>
-				<button class="close-modal">Close</button>
-			</p>
-			</div>
-		</div>
+    <div id="modal-a" class="modal">
+      <div class="inner">
+      <p class="report-before">Size at open: <strong class="result"></strong></p>
+      <p class="report-after">Time to open: <strong class="result"></strong></p>
+      <p>
+        A modal window blocks all other workflow in the top-level program until the modal window is closed, as opposed to modeless dialogs that allow users to operate with other windows. Modal windows are intended to grab the user's full attention. Users may not recognize that a modal window requires their attention, leading to confusion about the main window being non-responsive, or causing loss of the user's data input intended for the main window (see Mode error). In some more pathological cases, the modal window will appear behind another window controlled by the same program, potentially rendering the entire program unresponsive until the modal window can be located manually.
+      </p>
+      <p>
+        However, many interface designers have recently taken steps to make modal windows more obvious and user friendly by darkening the background behind the window or allowing any mouse click outside of the modal window to force the window to close – a design called a Lightbox – thus alleviating those problems. Jakob Nielsen states as an advantage of modal dialogs that it improves user awareness: "When something does need fixing, it's better to make sure that the user knows about it". For this goal, the lightbox design provides strong visual contrast of the dialog over the rest of the visuals. The lightbox technique is now a common tool in website design.  
+      </p>
+      <p>
+        <button class="close-modal">Close</button>
+      </p>
+      </div>
+    </div>
 
-		<section id="section-a" class="modal">
-			<h2 class="modal-header">WHAT ARE NORTHERN LIGHTS?</h2>
-			<div class="modal-content">
-				<p>
-					The bright dancing lights of the aurora are actually collisions between electrically charged particles from the sun that enter the earth's atmosphere. The lights are seen above the magnetic poles of the northern and southern hemispheres. They are known as 'Aurora borealis' in the north and 'Aurora australis' in the south.. 
-				</p>
-				<p>
-					Auroral displays appear in many colours although pale green and pink are the most common. Shades of red, yellow, green, blue, and violet have been reported. The lights appear in many forms from patches or scattered clouds of light to streamers, arcs, rippling curtains or shooting rays that light up the sky with an eerie glow.	
-				</p>
-			</div>
-			<div class="modal-footer">
-				<p>
-					<button class="close-modal">Close</button>
-				</p>
-			</div>
-		</section>
+    <script src="./lib/jquery-1.10.2.js"></script>
+    <script src="./jquery.kixx-modal.js"></script>
 
-		<section id="section-b" class="modal">
-			<h2 class="modal-header">WHAT CAUSES THE NORTHERN LIGHTS?</h2>
-			<div class="modal-content">
-				<p>
-					The Northern Lights are actually the result of collisions between gaseous particles in the Earth's atmosphere with charged particles released from the sun's atmosphere. Variations in colour are due to the type of gas particles that are colliding. The most common auroral color, a pale yellowish-green, is produced by oxygen molecules located about 60 miles above the earth. Rare, all-red auroras are produced by high-altitude oxygen, at heights of up to 200 miles. Nitrogen produces blue or purplish-red aurora.
-				</p>
-				<p>
-					The connection between the Northern Lights and sunspot activity has been suspected since about 1880. Thanks to research conducted since the 1950's, we now know that electrons and protons from the sun are blown towards the earth on the 'solar wind'. (Note: 1957-58 was International Geophysical Year and the atmosphere was studied extensively with balloons, radar, rockets and satellites. Rocket research is still conducted by scientists at Poker Flats, a facility under the direction of the University of Alaska at Fairbanks					
-				</p>
-			</div>
-			<div class="modal-footer">
-				<p>
-					<button class="close-modal">Close</button>
-				</p>
-			</div>
-		</section>
-		
-		<section id="section-c" class="modal">
-			<h2 class="modal-header">IMAGES</h2>
-			<div class="modal-content">
-				<img src="http://upload.wikimedia.org/wikipedia/en/4/4d/Aurora_Borealis_Poster.jpg" width="1640">
-			</div>
-			<div class="modal-footer">
-				<p>
-					<button class="close-modal">Close</button>
-				</p>
-			</div>
-		</section>
+    <script>
+    $(function ($) {
+      var time = new Date().getTime()
 
-		<script src="./lib/jquery-1.10.2.js"></script>
-		<script src="./jquery.kixx-modal.js"></script>
-
-		<script>
-		$(function ($) {
-			var time = new Date().getTime()
-
-			$('a.trigger-modal').kixxModal('register', {open: {position: false}});
-
-			$('#modal-a').on('kixx-modal:opening', function (ev) {
-				var $el = $(this)
-					, result = $el.innerWidth() +'x'+ $el.innerHeight()
-				$(this).find('.report-before').find('.result').text(result);
-			}).on('kixx-modal:opened', function (ev) {
-				var result = (new Date().getTime() - time) +'ms'
-				$(this).find('.report-after').find('.result').text(result);
-			});
-		});
-
-		$(function ($) {
-			var deck = $.kixxModal.createDeck()
-				, timeout
-
-			deck.on('kixx-modal:opening', function () {
-				window.clearTimeout(timeout);
-			});
-
-			deck.on('kixx-modal:closed', function () {
-				timeout = window.setTimeout(function () {
-					window.location.hash = '';
-				}, 30);
-			});
-
-			$(window).on('hashchange', function (ev) {
-				var id = window.location.hash.replace(/^#/, '')
-				if (id) {
-					deck.open(id);
-				} else {
-					deck.close();
-				}
-			});
-
-			$(window).triggerHandler('hashchange');
-		});
-		</script>
-	</body>
+      $('a.trigger-modal').kixxModal('register');
+    });
+    </script>
+  </body>
 </html>

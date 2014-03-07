@@ -35,7 +35,7 @@
         , position = refunct(opts, 'position')
         , $this = this
 
-      if (this.data('kixxModalLocked') || this.data('kixxModalOpen')) {
+      if (this.data('kixxModalLocked')) {
         return complete.call(this, false);
       }
 
@@ -43,7 +43,6 @@
       this.data('kixxModalOptions', opts);
 
       opts.complete = function () {
-        $this.data('kixxModalOpen', true);
         $this.data('kixxModalLocked', false);
         $this.trigger('kixx-modal:opened');
         complete.call(this, true);
@@ -69,14 +68,13 @@
       var complete = refunct(opts, 'complete')
         , $this = this
 
-      if (this.data('kixxModalLocked') || !this.data('kixxModalOpen')) {
+      if (this.data('kixxModalLocked')) {
         return complete.call(this, false);
       }
 
       this.data('kixxModalLocked', true);
 
       opts.complete = function () {
-        $this.data('kixxModalOpen', false);
         $this.data('kixxModalLocked', false);
         $this.trigger('kixx-modal:closed');
         complete.call(this, true);
@@ -84,7 +82,7 @@
 
       kixxModal.$overlay().fadeOut(200);
       this.fadeOut(opts);
-      
+
       this.trigger('kixx-modal:closing');
       return this;
     }
